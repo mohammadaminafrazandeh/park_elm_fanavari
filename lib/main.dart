@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:park_elm_fanavari/colors.dart';
+import 'package:park_elm_fanavari/image_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
@@ -16,10 +17,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var currentIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     // final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    print(screenWidth);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -30,89 +33,27 @@ class _MyAppState extends State<MyApp> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: const Color(0xff1f0990),
           items: [
-            BottomNavigationBarItem(
+            bottomNavigationBarItembuilder(
               icon: const Icon(Icons.more_horiz_outlined),
               label: 'منو بیشتر',
-              activeIcon: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                          color: Color(0xff02d0ff),
-                          borderRadius: BorderRadius.circular(3)),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xff1f0990),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(Icons.more_horiz_outlined,
-                        color: Colors.white),
-                  ),
-                ],
-              ),
+              activatedIcon:
+                  const CustumMoreIcon(), //! custom 'more' icon when it's actived
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline_rounded),
+            bottomNavigationBarItembuilder(
+              icon: const Icon(Icons.person_outline_rounded),
               label: 'اطلاعات من',
-              activeIcon: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                          color: Color(0xff02d0ff),
-                          borderRadius: BorderRadius.circular(3)),
-                    ),
-                  ),
-                  const Icon(Icons.person),
-                ],
-              ),
+              activatedIcon: const Icon(Icons.person),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_none_outlined),
+            bottomNavigationBarItembuilder(
+              icon: const Icon(Icons.notifications_none_outlined),
               label: 'اطلاع رسانی',
-              activeIcon: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                          color: Color(0xff02d0ff),
-                          borderRadius: BorderRadius.circular(3)),
-                    ),
-                  ),
-                  const Icon(Icons.notifications),
-                ],
-              ),
+              activatedIcon: const Icon(Icons.notifications),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
+            bottomNavigationBarItembuilder(
+              icon: const Icon(Icons.home_outlined),
               label: 'داشبورد من',
-              activeIcon: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                          color: Color(0xff02d0ff),
-                          borderRadius: BorderRadius.circular(3)),
-                    ),
-                  ),
-                  const Icon(Icons.home),
-                ],
-              ),
-            ),
+              activatedIcon: const Icon(Icons.home),
+            )
           ],
           onTap: (index) {
             currentIndex = index;
@@ -121,389 +62,572 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: ListView(
+          child: SizedBox(
+            child: ListView(
+              children: [
+                HeaderStackWidget(
+                    screenWidth: screenWidth), //! Header Stack Widget
+                const SizedBox(height: 30),
+                //! 1# list------------------------------------------------
+                Padding(
+                  padding: EdgeInsets.all(
+                    (screenWidth < 433) ? 0.05 * screenWidth : 24,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'تکمیل فرم پذیرش مرکز رشد',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => launchUrl(
+                                  Uri.parse('https://www.google.com')),
+                              child: Container(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Color(0xff1f0990),
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'دریافت فرم پذیرش ایده محوری',
+                                  style: TextStyle(
+                                    color: const Color(0xff1f0990),
+                                    fontSize: (screenWidth < 433)
+                                        ? 0.030 * screenWidth
+                                        : 14,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 1#
+                      MyStackedIconsListView(
+                        backImage: backRoundHeadIcon,
+                        sizeOfBackIcon:
+                            (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                        backColor: cGrayGreenBackIcon,
+                        sizeOfFrontIcon:
+                            (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                        frontImage: Icon(
+                          Icons.check_circle_outline_rounded,
+                          color: cGreenCheckIcon,
+                          size: (screenWidth < 433) ? 0.09 * screenWidth : 35,
+                        ),
+                        frontPositionVertical: -12,
+                        frontPositionHorizantal: -12,
+                        sizedBoxHeight: 0,
+                      ),
+                    ],
+                  ),
+                ),
+                //! 2# list------------------------------------------------
+                Padding(
+                  padding: EdgeInsets.all(
+                      (screenWidth < 433) ? 0.05 * screenWidth : 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                  width: (screenWidth < 433)
+                                      ? 0.09 * screenWidth
+                                      : 40,
+                                  child: SvgPicture.asset(sandWatchIcon)),
+                              const SizedBox(height: 40)
+                            ],
+                          ),
+                          SizedBox(
+                            width:
+                                (screenWidth < 433) ? 0.06 * screenWidth : 40,
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'ارزیابی اولبه طرح ایده محوری توسط کارشناس فنی' //todo this part of cannot summerise to fewer lines!
+                                  : 'ارزیابی اولبه طرح ایده محوری\n توسط کارشناس فنی'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: (screenWidth < 433)
+                                    ? 0.03 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            Text(
+                              (screenWidth >= 608
+                                  ? 'مشاوره علمی و نظارت اعضای هیأت علمی و کارشناسان با تجربه' //todo this part of cannot summerise to fewer lines!
+                                  : 'مشاوره علمی و نظارت اعضای هیأت\n  علمی و کارشناسان با تجربه'), //todo this part of cannot summerise to fewer lines!
+                              maxLines: 10,
+                              softWrap: true,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: const Color(0xff3b3b3b),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.03 * screenWidth
+                                    : 14,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 2#
+                      MyStackedIconsListView(
+                        backImage: backRoundHeadIcon,
+                        sizeOfBackIcon:
+                            (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                        backColor: cSkyBlueBackIcon,
+                        sizeOfFrontIcon:
+                            (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                        frontImage: SvgPicture.asset(iconSearch),
+                        frontPositionVertical: -12,
+                        frontPositionHorizantal: -6,
+                        sizedBoxHeight: 20,
+                      )
+                    ],
+                  ),
+                ),
+                //! 3# list------------------------------------------------
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'ارسال طرح به داور فنی واقتصادی',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff626262),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'مشاوره علمی و نظارت اعضای هیأت علمی و کارشناسان با تجربه' //todo this part of cannot summerise to fewer lines!
+                                  : 'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: const Color(0xff9e9e9e),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 3#
+                      MyStackedIconsListView(
+                          backImage: backRoundHeadIcon,
+                          sizeOfBackIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          backColor: cGray100,
+                          sizeOfFrontIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          frontImage: SvgPicture.asset(iconStudent),
+                          frontPositionVertical: -6,
+                          frontPositionHorizantal: -12,
+                          sizedBoxHeight: 5)
+                    ],
+                  ),
+                ),
+                //! 4# list------------------------------------------------
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              (screenWidth >= 550
+                                  ? 'بررسی طرح و مصاحبه در جلسه کمیته استقرار با حضور داور تخصصی' //todo this part of cannot summerise to fewer lines!
+                                  : 'بررسی طرح و مصاحبه در جلسه کمیته\n استقرار با حضور داور تخصصی'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff626262),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            Text(
+                              (screenWidth >= 550
+                                  ? 'مشاوره علمی و نظارت اعضای هیأت علمی و کارشناسان با تجربه' //todo this part of cannot summerise to fewer lines!
+                                  : 'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: const Color(0xff9e9e9e),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 4#
+                      MyStackedIconsListView(
+                          backImage: backRoundHeadIcon,
+                          sizeOfBackIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          backColor: cGray100,
+                          sizeOfFrontIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          frontImage: SvgPicture.asset(iconIdea),
+                          frontPositionVertical: 0,
+                          frontPositionHorizantal: -12,
+                          sizedBoxHeight: 20)
+                    ],
+                  ),
+                ),
+                //! 5# list------------------------------------------------
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'جمع بندی و اعلام نتیجه کمیته استقرار به متقاضی' //todo this part of cannot summerise to fewer lines!
+                                  : 'جمع بندی و اعلام نتیجه کمیته استقرار\n به متقاضی'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff626262),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'مشاوره علمی و نظارت اعضای هیأت علمی و کارشناسان با تجربه' //todo this part of cannot summerise to fewer lines!
+                                  : 'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: const Color(0xff9e9e9e),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 5#
+                      MyStackedIconsListView(
+                          backImage: backRoundHeadIcon,
+                          sizeOfBackIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          backColor: cGray100,
+                          sizeOfFrontIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          frontImage: SvgPicture.asset(iconJudge),
+                          frontPositionVertical: 0,
+                          frontPositionHorizantal: -12,
+                          sizedBoxHeight: 25),
+                    ],
+                  ),
+                ),
+                //! 6# list------------------------------------------------
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'تهیه پیش نویس قرارداد و دریافت مدارک مورد نیاز جهت عقد قرارداد' //todo this part of cannot summerise to fewer lines!
+                                  : 'تهیه پیش نویس قرارداد و دریافت مدارک\n مورد نیاز جهت عقد قرارداد'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff626262),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            ),
+                            Text(
+                              (screenWidth >= 543
+                                  ? 'مشاوره علمی و نظارت اعضای هیأت علمی و کارشناسان با تجربه' //todo this part of cannot summerise to fewer lines!
+                                  : 'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه'), //todo this part of cannot summerise to fewer lines!
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: const Color(0xff9e9e9e),
+                                fontSize: (screenWidth < 433)
+                                    ? 0.030 * screenWidth
+                                    : 14,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //! My Stacked Icons List View 6#
+                      MyStackedIconsListView(
+                          backImage: backRoundHeadIcon,
+                          sizeOfBackIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          backColor: cGray100,
+                          sizeOfFrontIcon:
+                              (screenWidth < 433) ? 0.09 * screenWidth : 40,
+                          frontImage: SvgPicture.asset(iconContract),
+                          frontPositionVertical: 0,
+                          frontPositionHorizantal: -12,
+                          sizedBoxHeight: 25)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //! MY Bottom Navigation Bar Method
+  BottomNavigationBar myBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: const Color(0xff1f0990),
+      items: [
+        bottomNavigationBarItembuilder(
+          icon: const Icon(Icons.more_horiz_outlined),
+          label: 'منو بیشتر',
+          activatedIcon:
+              const CustumMoreIcon(), //! custom 'more' icon when it's actived
+        ),
+        bottomNavigationBarItembuilder(
+          icon: const Icon(Icons.person_outline_rounded),
+          label: 'اطلاعات من',
+          activatedIcon: const Icon(Icons.person),
+        ),
+        bottomNavigationBarItembuilder(
+          icon: const Icon(Icons.notifications_none_outlined),
+          label: 'اطلاع رسانی',
+          activatedIcon: const Icon(Icons.notifications),
+        ),
+        bottomNavigationBarItembuilder(
+          icon: const Icon(Icons.home_outlined),
+          label: 'داشبورد من',
+          activatedIcon: const Icon(Icons.home),
+        )
+      ],
+      onTap: (index) {
+        currentIndex = index;
+        setState(() {});
+      },
+    );
+  }
+
+  //! Bottom Navigation Bar Item Builder Method
+  BottomNavigationBarItem bottomNavigationBarItembuilder({
+    required Icon icon,
+    required String label,
+    required Widget activatedIcon,
+  }) {
+    return BottomNavigationBarItem(
+      icon: icon,
+      label: label,
+      activeIcon: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 32,
+              height: 4,
+              decoration: BoxDecoration(
+                  color: const Color(0xff02d0ff),
+                  borderRadius: BorderRadius.circular(3)),
+            ),
+          ),
+          activatedIcon,
+        ],
+      ),
+    );
+  }
+}
+
+//! My Stacked Icons List View
+class MyStackedIconsListView extends StatelessWidget {
+  final String backImage;
+  final Color backColor;
+  final frontImage;
+  final double frontPositionVertical;
+  final double frontPositionHorizantal;
+  final double sizedBoxHeight;
+  final double sizeOfBackIcon;
+  final double sizeOfFrontIcon;
+
+  const MyStackedIconsListView({
+    super.key,
+    required this.sizeOfFrontIcon,
+    required this.sizeOfBackIcon,
+    required this.backImage,
+    required this.backColor,
+    required this.frontImage,
+    required this.frontPositionVertical,
+    required this.frontPositionHorizantal,
+    required this.sizedBoxHeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            SizedBox(
+              width: sizeOfBackIcon,
+              child: Image.asset(
+                backImage,
+                fit: BoxFit.fill,
+                color: backColor,
+              ),
+            ),
+            Positioned(
+                bottom: frontPositionVertical,
+                left: frontPositionHorizantal,
+                child: SizedBox(
+                  width: sizeOfFrontIcon,
+                  child: frontImage,
+                )),
+          ],
+        ),
+        SizedBox(
+          height: sizedBoxHeight,
+        ),
+      ],
+    );
+  }
+}
+
+//! Custom 'more' Icon
+class CustumMoreIcon extends StatelessWidget {
+  const CustumMoreIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xff1f0990),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Icon(Icons.more_horiz_outlined, color: Colors.white),
+    );
+  }
+}
+
+//! Header Stack Widget
+class HeaderStackWidget extends StatelessWidget {
+  const HeaderStackWidget({
+    super.key,
+    required this.screenWidth,
+  });
+
+  final double screenWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topCenter,
+      children: [
+        SvgPicture.asset(blueHeader, fit: BoxFit.fill, width: screenWidth),
+        SvgPicture.asset(maskTriangle, fit: BoxFit.fill, width: screenWidth),
+        Positioned(
+          top: (screenWidth < 433) ? 0.046 * screenWidth : 20,
+          child: Text(
+            'مراحل پذیرش در دوره رشد مقدماتی',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: (screenWidth < 433) ? 0.030 * screenWidth : 14,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          top: 10,
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: (screenWidth < 313) ? -40 : -30,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.topCenter,
-                children: [
-                  SvgPicture.asset('assets/images/Rectangle 1070.svg',
-                      fit: BoxFit.fill, width: screenWidth),
-                  SvgPicture.asset('assets/images/Group 851.svg',
-                      fit: BoxFit.fill, width: screenWidth),
-                  const Positioned(
-                    top: 20,
-                    child: Text(
-                      'مراحل پذیرش در دوره رشد مقدماتی',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 10,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -30,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/Ellipse 22.svg',
-                          width: 70,
-                        ),
-                        Positioned(
-                          top: 7,
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            width: 60,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              SvgPicture.asset(
+                whiteCircle,
+                width: 70,
               ),
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text('تکمیل فرم پذیرش مرکز رشد',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          InkWell(
-                            onTap: () =>
-                                launchUrl(Uri.parse('https://www.google.com')),
-                            child: const Text(
-                              'دریافت فرم پذیرش ایده محوری',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Color(0xff1f0990)),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          child: Image.asset(
-                            'assets/images/Rectangle 211.png',
-                            fit: BoxFit.fill,
-                            color: const Color(0xffd9f1e1),
-                          ),
-                        ),
-                        const Positioned(
-                          bottom: -12,
-                          left: -12,
-                          child: Icon(
-                            Icons.check_circle_outline_rounded,
-                            color: Color(0xff40bf6a),
-                            size: 35.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Column(
-                          children: [
-                            SvgPicture.asset('assets/images/Frame 1827.svg'),
-                            const SizedBox(height: 40)
-                          ],
-                        ),
-                        const SizedBox(width: 40)
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'ارزیابی اولبه طرح ایده محوری توسط\n کارشناس فنی',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(color: Color(0xff3b3b3b)),
-                          )
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Image.asset(
-                                'assets/images/Rectangle 211.png',
-                                fit: BoxFit.fill,
-                                color: const Color(0xff02d0ff),
-                              ),
-                            ),
-                            Positioned(
-                                bottom: -6,
-                                left: -12,
-                                child: SvgPicture.asset(
-                                    'assets/images/reshot-icon-search-thinking-74TMXANEZC 1.svg')),
-                          ],
-                        ),
-                        const SizedBox(height: 40),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text('ارسال طرح به داور فنی واقتصادی',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff626262))),
-                          Text(
-                            'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(color: Color(0xff9e9e9e)),
-                          )
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Image.asset(
-                                'assets/images/Rectangle 211.png',
-                                fit: BoxFit.fill,
-                                color: const Color(0xfff7f7f7),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: -0,
-                              left: -12,
-                              child: SvgPicture.asset(
-                                  'assets/images/reshot-icon-student-3QUJDPNLXF 1.svg'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 18)
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'بررسی طرح و مصاحبه در جلسه کمیته\n استقرار با حضور داور تخصصی',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff626262),
-                            ),
-                          ),
-                          Text(
-                            'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              color: Color(0xff9e9e9e),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Image.asset(
-                                'assets/images/Rectangle 211.png',
-                                fit: BoxFit.fill,
-                                color: const Color(0xfff7f7f7),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: -0,
-                              left: -12,
-                              child: SvgPicture.asset(
-                                  'assets/images/reshot-icon-idea-PFZLVDHGR8 1.svg'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32)
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'جمع بندی و اعلام نتیجه کمیته استقرار\n به متقاضی',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff626262),
-                            ),
-                          ),
-                          Text(
-                            'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              color: Color(0xff9e9e9e),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Image.asset(
-                                'assets/images/Rectangle 211.png',
-                                fit: BoxFit.fill,
-                                color: const Color(0xfff7f7f7),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: -0,
-                              left: -12,
-                              child: SvgPicture.asset(
-                                  'assets/images/reshot-icon-judge-CTHFSZP2YL 1.svg'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 35)
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'تهیه پیش نویس قرارداد و دریافت مدارک\n مورد نیاز جهت عقد قرارداد',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff626262),
-                            ),
-                          ),
-                          Text(
-                            'مشاوره علمی و نظارت اعضای هیأت\n علمی و کارشناسان با تجربه',
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              color: Color(0xff9e9e9e),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Image.asset(
-                                'assets/images/Rectangle 211.png',
-                                fit: BoxFit.fill,
-                                color: const Color(0xfff7f7f7),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: -0,
-                              left: -12,
-                              child: SvgPicture.asset(
-                                  'assets/images/reshot-icon-contract-UK36F4RCD8 1.svg'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32)
-                      ],
-                    ),
-                  ],
+              Positioned(
+                top: 7,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 60,
                 ),
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }
