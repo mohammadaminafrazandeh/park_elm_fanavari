@@ -23,4 +23,12 @@ const String iconJudge =
     'assets/images/reshot-icon-judge-CTHFSZP2YL 1.svg'; //* fifth front-icon in stacked-icon-listview
 const String iconContract =
     'assets/images/reshot-icon-contract-UK36F4RCD8 1.svg'; //* sixth front-icon in stacked-icon-listview
-
+//!------------------------------login
+const String dots =
+    'assets/images/Frame 1673.svg'; //* little dots in form of rectangle in the left of the screen
+const String handShakePicture =
+    'assets/images/Rectangle 1021.png'; //* hand shake picture in the middle of the picture
+const String mobileIcon =
+    'assets/images/mobile.svg'; //* mobile icon as suffix for text filed
+//!--------------------------------SMSAuth
+const String editIcon = 'assets/images/edit-2.png';
